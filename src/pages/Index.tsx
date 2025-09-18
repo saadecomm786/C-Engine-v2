@@ -6,47 +6,13 @@ import TradingStats from "@/components/TradingStats";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Activity, Settings, Wifi } from "lucide-react";
+import { Activity, Settings, Wifi, WifiOff } from "lucide-react";
 import { toast } from "sonner";
-import type { CoinData, Signal, BreakoutAlert, TradingStats as TradingStatsType } from "@/types/trading";
+import { useRealTimeCrypto } from "@/hooks/useRealTimeCrypto";
+import { SignalEngine } from "@/services/signalEngine";
+import type { Signal, BreakoutAlert, TradingStats as TradingStatsType } from "@/types/trading";
 
-// Mock data for demonstration
-const mockCoins: CoinData[] = [
-  { symbol: "BTCUSDT", price: 43250.75, change24h: 2.45, volume: 28500000000, score: 0.72, lastUpdate: new Date().toISOString() },
-  { symbol: "ETHUSDT", price: 2650.30, change24h: -1.23, volume: 15200000000, score: -0.35, lastUpdate: new Date().toISOString() },
-  { symbol: "SOLUSDT", price: 98.45, change24h: 5.67, volume: 2100000000, score: 0.84, lastUpdate: new Date().toISOString() },
-  { symbol: "XRPUSDT", price: 0.6234, change24h: -0.89, volume: 1800000000, score: -0.12, lastUpdate: new Date().toISOString() },
-  { symbol: "ADAUSDT", price: 0.4567, change24h: 3.21, volume: 950000000, score: 0.56, lastUpdate: new Date().toISOString() },
-];
-
-const mockSignals: Signal[] = [
-  {
-    id: "1",
-    pair: "BTCUSDT",
-    direction: "LONG",
-    entryPrice: 43200.00,
-    tp1: 43850.00,
-    tp2: 44500.00,
-    sl: 42650.00,
-    status: "OPEN",
-    createdAt: new Date().toISOString(),
-    riskReward: 2.4
-  },
-  {
-    id: "2", 
-    pair: "SOLUSDT",
-    direction: "LONG",
-    entryPrice: 98.20,
-    tp1: 101.50,
-    tp2: 104.80,
-    sl: 95.90,
-    status: "HIT_TP1",
-    createdAt: new Date(Date.now() - 1800000).toISOString(),
-    result: "WIN",
-    riskReward: 2.9
-  }
-];
-
+// Mock breakouts and stats for now - these will be replaced with real data
 const mockBreakouts: BreakoutAlert[] = [
   {
     id: "1",
@@ -75,62 +41,47 @@ const mockStats: TradingStatsType = {
 };
 
 const Index = () => {
-  const [coins, setCoins] = useState(mockCoins);
-  const [signals, setSignals] = useState(mockSignals);
-  const [breakouts, setBreakouts] = useState(mockBreakouts);
-  const [stats, setStats] = useState(mockStats);
-  const [lastUpdate, setLastUpdate] = useState(new Date());
+  const { coins, isConnected, lastUpdate } = useRealTimeCrypto();
+  const [signals, setSignals] = useState<Signal[]>([]);
+  const [breakouts] = useState(mockBreakouts);
+  const [stats] = useState(mockStats);
+  const signalEngine = SignalEngine.getInstance();
 
-  // Simulate real-time price updates
+  // Load recent signals from database and subscribe to updates
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCoins(prevCoins => 
-        prevCoins.map(coin => ({
-          ...coin,
-          price: coin.price * (1 + (Math.random() - 0.5) * 0.002),
-          score: Math.max(-1, Math.min(1, coin.score + (Math.random() - 0.5) * 0.1)),
-          lastUpdate: new Date().toISOString()
-        }))
-      );
-      setLastUpdate(new Date());
-    }, 1000);
+    signalEngine.loadRecentSignals();
+    
+    const unsubscribe = signalEngine.subscribe((newSignals) => {
+      setSignals(newSignals);
+    });
 
-    return () => clearInterval(interval);
-  }, []);
+    return unsubscribe;
+  }, [signalEngine]);
 
-  const handleGenerateSignal = () => {
-    // Find highest scoring coin
-    const bestCoin = coins.reduce((prev, current) => 
-      Math.abs(current.score) > Math.abs(prev.score) ? current : prev
-    );
-
-    if (Math.abs(bestCoin.score) >= 0.55) {
-      const direction: "LONG" | "SHORT" = bestCoin.score > 0 ? "LONG" : "SHORT";
-      const entryPrice = bestCoin.price;
-      const riskPercent = 0.02; // 2% risk
-      
-      const newSignal: Signal = {
-        id: Date.now().toString(),
-        pair: bestCoin.symbol,
-        direction,
-        entryPrice,
-        tp1: direction === "LONG" ? entryPrice * 1.015 : entryPrice * 0.985,
-        tp2: direction === "LONG" ? entryPrice * 1.03 : entryPrice * 0.97,
-        sl: direction === "LONG" ? entryPrice * 0.98 : entryPrice * 1.02,
-        status: "OPEN",
-        createdAt: new Date().toISOString(),
-        riskReward: 2.5
-      };
-
-      setSignals(prev => [newSignal, ...prev.slice(0, 9)]);
-      setStats(prev => ({ ...prev, activeSignals: prev.activeSignals + 1, todaySignals: prev.todaySignals + 1 }));
-      
-      toast.success(`New ${direction} signal generated for ${bestCoin.symbol}`, {
-        description: `Entry: $${entryPrice.toFixed(4)} • Score: ${bestCoin.score.toFixed(2)}`
+  const handleGenerateSignal = async () => {
+    if (coins.length === 0) {
+      toast.warning("No market data available", {
+        description: "Waiting for price feeds to connect"
       });
-    } else {
-      toast.warning("No strong signals detected", {
-        description: "Waiting for better market conditions"
+      return;
+    }
+
+    try {
+      const signal = await signalEngine.generateSignal(coins);
+      
+      if (signal) {
+        toast.success(`New ${signal.direction} signal generated for ${signal.pair}`, {
+          description: `Entry: $${signal.entryPrice.toFixed(4)} • Score: ${signal.features?.score?.toFixed(2) || 'N/A'}`
+        });
+      } else {
+        toast.warning("No strong signals detected", {
+          description: "Waiting for better market conditions or avoiding duplicate signals"
+        });
+      }
+    } catch (error) {
+      console.error('Error generating signal:', error);
+      toast.error("Failed to generate signal", {
+        description: "Please try again in a moment"
       });
     }
   };
@@ -150,9 +101,13 @@ const Index = () => {
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <Wifi className="w-4 h-4 text-long" />
-              <Badge variant="default" className="bg-long text-long-foreground">
-                Connected
+              {isConnected ? (
+                <Wifi className="w-4 h-4 text-long" />
+              ) : (
+                <WifiOff className="w-4 h-4 text-short" />
+              )}
+              <Badge variant="default" className={isConnected ? "bg-long text-long-foreground" : "bg-short text-short-foreground"}>
+                {isConnected ? "Connected" : "Connecting..."}
               </Badge>
             </div>
             <div className="flex items-center gap-2">
