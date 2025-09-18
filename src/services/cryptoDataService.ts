@@ -8,7 +8,7 @@ export interface PriceUpdate {
   timestamp: number;
 }
 
-// Tracked coins with their API mappings
+// Top 50 USDT pairs - covering majors + high-volume alts
 export const TRACKED_COINS = [
   { symbol: "BTCUSDT", coinGeckoId: "bitcoin", coinCapId: "bitcoin", coinbaseId: "BTC-USD" },
   { symbol: "ETHUSDT", coinGeckoId: "ethereum", coinCapId: "ethereum", coinbaseId: "ETH-USD" },
@@ -20,6 +20,46 @@ export const TRACKED_COINS = [
   { symbol: "MATICUSDT", coinGeckoId: "polygon", coinCapId: "polygon", coinbaseId: "MATIC-USD" },
   { symbol: "DOTUSDT", coinGeckoId: "polkadot", coinCapId: "polkadot", coinbaseId: "DOT-USD" },
   { symbol: "LTCUSDT", coinGeckoId: "litecoin", coinCapId: "litecoin", coinbaseId: "LTC-USD" },
+  { symbol: "AVAXUSDT", coinGeckoId: "avalanche-2", coinCapId: "avalanche", coinbaseId: "AVAX-USD" },
+  { symbol: "TRXUSDT", coinGeckoId: "tron", coinCapId: "tron", coinbaseId: "TRX-USD" },
+  { symbol: "LINKUSDT", coinGeckoId: "chainlink", coinCapId: "chainlink", coinbaseId: "LINK-USD" },
+  { symbol: "ATOMUSDT", coinGeckoId: "cosmos", coinCapId: "cosmos", coinbaseId: "ATOM-USD" },
+  { symbol: "APTUSDT", coinGeckoId: "aptos", coinCapId: "aptos", coinbaseId: "APT-USD" },
+  { symbol: "FILUSDT", coinGeckoId: "filecoin", coinCapId: "filecoin", coinbaseId: "FIL-USD" },
+  { symbol: "UNIUSDT", coinGeckoId: "uniswap", coinCapId: "uniswap", coinbaseId: "UNI-USD" },
+  { symbol: "NEARUSDT", coinGeckoId: "near", coinCapId: "near-protocol", coinbaseId: "NEAR-USD" },
+  { symbol: "ICPUSDT", coinGeckoId: "internet-computer", coinCapId: "internet-computer", coinbaseId: "ICP-USD" },
+  { symbol: "ALGOUSDT", coinGeckoId: "algorand", coinCapId: "algorand", coinbaseId: "ALGO-USD" },
+  { symbol: "VETUSDT", coinGeckoId: "vechain", coinCapId: "vechain", coinbaseId: "VET-USD" },
+  { symbol: "HBARUSDT", coinGeckoId: "hedera-hashgraph", coinCapId: "hedera-hashgraph", coinbaseId: "HBAR-USD" },
+  { symbol: "STXUSDT", coinGeckoId: "blockstack", coinCapId: "stacks", coinbaseId: "STX-USD" },
+  { symbol: "EOSUSDT", coinGeckoId: "eos", coinCapId: "eos", coinbaseId: "EOS-USD" },
+  { symbol: "XLMUSDT", coinGeckoId: "stellar", coinCapId: "stellar", coinbaseId: "XLM-USD" },
+  { symbol: "OPUSDT", coinGeckoId: "optimism", coinCapId: "optimism", coinbaseId: "OP-USD" },
+  { symbol: "LDOUSDT", coinGeckoId: "lido-dao", coinCapId: "lido-dao-token", coinbaseId: "LDO-USD" },
+  { symbol: "ARBUSDT", coinGeckoId: "arbitrum", coinCapId: "arbitrum", coinbaseId: "ARB-USD" },
+  { symbol: "RUNEUSDT", coinGeckoId: "thorchain", coinCapId: "thorchain", coinbaseId: "RUNE-USD" },
+  { symbol: "SANDUSDT", coinGeckoId: "the-sandbox", coinCapId: "the-sandbox", coinbaseId: "SAND-USD" },
+  { symbol: "AXSUSDT", coinGeckoId: "axie-infinity", coinCapId: "axie-infinity", coinbaseId: "AXS-USD" },
+  { symbol: "THETAUSDT", coinGeckoId: "theta-network", coinCapId: "theta-network", coinbaseId: "THETA-USD" },
+  { symbol: "MANAUSDT", coinGeckoId: "decentraland", coinCapId: "decentraland", coinbaseId: "MANA-USD" },
+  { symbol: "CHZUSDT", coinGeckoId: "chiliz", coinCapId: "chiliz", coinbaseId: "CHZ-USD" },
+  { symbol: "FLOWUSDT", coinGeckoId: "flow", coinCapId: "flow", coinbaseId: "FLOW-USD" },
+  { symbol: "EGLDUSDT", coinGeckoId: "elrond-erd-2", coinCapId: "multiversx-elrond", coinbaseId: "EGLD-USD" },
+  { symbol: "KAVAUSDT", coinGeckoId: "kava", coinCapId: "kava", coinbaseId: "KAVA-USD" },
+  { symbol: "CRVUSDT", coinGeckoId: "curve-dao-token", coinCapId: "curve-dao-token", coinbaseId: "CRV-USD" },
+  { symbol: "DYDXUSDT", coinGeckoId: "dydx", coinCapId: "dydx", coinbaseId: "DYDX-USD" },
+  { symbol: "COMPUSDT", coinGeckoId: "compound-governance-token", coinCapId: "compound", coinbaseId: "COMP-USD" },
+  { symbol: "MKRUSDT", coinGeckoId: "maker", coinCapId: "maker", coinbaseId: "MKR-USD" },
+  { symbol: "SNXUSDT", coinGeckoId: "havven", coinCapId: "synthetix-network-token", coinbaseId: "SNX-USD" },
+  { symbol: "GMXUSDT", coinGeckoId: "gmx", coinCapId: "gmx", coinbaseId: "GMX-USD" },
+  { symbol: "GRTUSDT", coinGeckoId: "the-graph", coinCapId: "the-graph", coinbaseId: "GRT-USD" },
+  { symbol: "AAVEUSDT", coinGeckoId: "aave", coinCapId: "aave", coinbaseId: "AAVE-USD" },
+  { symbol: "1INCHUSDT", coinGeckoId: "1inch", coinCapId: "1inch", coinbaseId: "1INCH-USD" },
+  { symbol: "ZECUSDT", coinGeckoId: "zcash", coinCapId: "zcash", coinbaseId: "ZEC-USD" },
+  { symbol: "DASHUSDT", coinGeckoId: "dash", coinCapId: "dash", coinbaseId: "DASH-USD" },
+  { symbol: "ENJUSDT", coinGeckoId: "enjincoin", coinCapId: "enjin-coin", coinbaseId: "ENJ-USD" },
+  { symbol: "KSMUSDT", coinGeckoId: "kusama", coinCapId: "kusama", coinbaseId: "KSM-USD" },
 ];
 
 class CryptoDataService {
