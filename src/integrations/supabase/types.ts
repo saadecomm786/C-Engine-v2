@@ -237,7 +237,6 @@ export type Database = {
           entry_max: number
           entry_mid: number
           entry_min: number
-          features: Json | null
           feedback: Json | null
           id: string
           model: string
@@ -264,7 +263,6 @@ export type Database = {
           entry_max: number
           entry_mid: number
           entry_min: number
-          features?: Json | null
           feedback?: Json | null
           id: string
           model: string
@@ -291,7 +289,6 @@ export type Database = {
           entry_max?: number
           entry_mid?: number
           entry_min?: number
-          features?: Json | null
           feedback?: Json | null
           id?: string
           model?: string

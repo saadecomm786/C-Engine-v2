@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import LiveTicker from "@/components/LiveTicker";
-import LiveMarketData from "@/components/LiveMarketData";
 import SignalsFeed from "@/components/SignalsFeed";
 import BreakoutAlerts from "@/components/BreakoutAlerts";
 import TradingStats from "@/components/TradingStats";
@@ -8,7 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Activity, Settings, Wifi, WifiOff, Zap, Target, TrendingUp } from "lucide-react";
+import { Activity, Settings, Wifi, WifiOff, Zap, Target } from "lucide-react";
 import { toast } from "sonner";
 import { useRealTimeCrypto } from "@/hooks/useRealTimeCrypto";
 import { SignalEngine, type TradingMode } from "@/services/signalEngine";
@@ -89,7 +88,7 @@ const Index = () => {
     signalEngine.setTradingMode(newMode);
     
     toast.success(`Switched to ${newMode.replace('_', ' ').toLowerCase()} mode`, {
-      description: `Auto-generation: ${checked ? '2 signals per minute' : '3 signals per minute'}`
+      description: `Auto-generation interval: ${checked ? '5-15 minutes' : '1 minute'}`
     });
   };
 
@@ -122,31 +121,29 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 p-4 space-y-6">
-      {/* Enhanced Header */}
-      <Card className="p-6 bg-gradient-to-r from-card to-card/50 border-primary/20">
+    <div className="min-h-screen bg-background p-4 space-y-6">
+      {/* Header */}
+      <Card className="p-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent flex items-center gap-3">
-              <TrendingUp className="w-8 h-8 text-primary" />
-              Super Human Crypto AI Trader
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+              Crypto Signal Engine
             </h1>
-            <p className="text-muted-foreground mt-1 flex items-center gap-2">
-              <Activity className="w-4 h-4" />
-              Analyzing all 50 coins • Auto-scan every 15s • 2-3 signals/min • 90% accuracy targeting
+            <p className="text-muted-foreground mt-1">
+              Real-time market analysis & signal generation
             </p>
           </div>
           <div className="flex items-center gap-4">
             {/* Trading Mode Switch */}
-            <div className="flex items-center gap-3 px-4 py-2 border rounded-lg bg-background/50 shadow-sm">
+            <div className="flex items-center gap-3 px-3 py-2 border rounded-lg bg-background/50">
               <Zap className="w-4 h-4 text-accent" />
-              <span className="text-sm font-medium">Scalping (3/min)</span>
+              <span className="text-sm font-medium">Scalping</span>
               <Switch 
                 checked={tradingMode === "DAY_TRADING"}
                 onCheckedChange={handleTradingModeChange}
                 className="data-[state=checked]:bg-primary"
               />
-              <span className="text-sm font-medium">Day Trading (2/min)</span>
+              <span className="text-sm font-medium">Day Trading</span>
               <Target className="w-4 h-4 text-primary" />
             </div>
             
@@ -156,8 +153,8 @@ const Index = () => {
               ) : (
                 <WifiOff className="w-4 h-4 text-short" />
               )}
-              <Badge variant="default" className={isConnected ? "bg-long text-long-foreground animate-pulse" : "bg-short text-short-foreground"}>
-                {isConnected ? `LIVE • ${coins.length}/50 PAIRS` : "CONNECTING..."}
+              <Badge variant="default" className={isConnected ? "bg-long text-long-foreground" : "bg-short text-short-foreground"}>
+                {isConnected ? `${coins.length}/50 Pairs` : "Connecting..."}
               </Badge>
             </div>
             <div className="flex items-center gap-2">
@@ -173,15 +170,10 @@ const Index = () => {
         </div>
       </Card>
 
-      {/* Live Market Data - Top 8 Coins */}
-      <LiveMarketData coins={coins} />
-      
-      {/* Live Ticker - All Coins */}
-      <LiveTicker coins={coins} />
-      
       {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
+          <LiveTicker coins={coins} />
           <SignalsFeed signals={signals} onGenerateSignal={handleGenerateSignal} />
         </div>
         
@@ -191,35 +183,20 @@ const Index = () => {
         </div>
       </div>
 
-      {/* System Status */}
-      <Card className="p-6 border-green-500/20 bg-green-500/5">
+      {/* Backend Integration Notice */}
+      <Card className="p-6 border-warning/50 bg-warning/5">
         <div className="flex items-start gap-3">
-          <Activity className="w-5 h-5 text-green-500 mt-0.5 animate-pulse" />
+          <Settings className="w-5 h-5 text-warning mt-0.5" />
           <div>
-            <h3 className="font-semibold text-green-500">Super Human AI Trader Active</h3>
+            <h3 className="font-semibold text-warning">Backend Integration Required</h3>
             <p className="text-sm text-muted-foreground mt-1 mb-3">
-              Super human crypto trader with 90% accuracy targeting. Analyzing all 50 USDT pairs with 
-              sophisticated volatility targeting, historical validation, and fake pump detection.
-              Continuous signal generation with no blank states.
+              To enable real-time WebSocket connections, signal processing, and database logging, 
+              this app needs backend functionality through Supabase integration.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="bg-blue-500/10 text-blue-400">All 50 Pairs</Badge>
-                <span className="text-xs text-muted-foreground">Continuous analysis</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="bg-purple-500/10 text-purple-400">Super Human AI</Badge>
-                <span className="text-xs text-muted-foreground">90% accuracy targeting</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="bg-orange-500/10 text-orange-400">No Fake Pumps</Badge>
-                <span className="text-xs text-muted-foreground">Historical validation</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="bg-green-500/10 text-green-400">Never Blank</Badge>
-                <span className="text-xs text-muted-foreground">2-3 signals/min</span>
-              </div>
-            </div>
+            <p className="text-sm text-muted-foreground">
+              Features requiring backend: WebSocket price feeds, signal generation algorithms, 
+              trade monitoring, database logging, API integrations, and real-time notifications.
+            </p>
           </div>
         </div>
       </Card>
