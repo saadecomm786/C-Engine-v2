@@ -9,19 +9,10 @@ interface LiveMarketDataProps {
 }
 
 const LiveMarketData: React.FC<LiveMarketDataProps> = ({ coins }) => {
-  // Show only 8 top coins: BTC, ETH, SOL + 5 top gainers/movers in 24h
+  // Show only BTC, ETH, SOL as per user requirement
   const displayCoins = useMemo(() => {
-    // Always include BTC, ETH, SOL
     const priorityCoins = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'];
-    const priority = coins.filter(coin => priorityCoins.includes(coin.symbol));
-    
-    // Get remaining coins sorted by 24h change (absolute value for movers)
-    const remaining = coins
-      .filter(coin => !priorityCoins.includes(coin.symbol))
-      .sort((a, b) => Math.abs(b.change24h) - Math.abs(a.change24h))
-      .slice(0, 5);
-    
-    return [...priority, ...remaining].slice(0, 8);
+    return coins.filter(coin => priorityCoins.includes(coin.symbol));
   }, [coins]);
 
   const totalVolume = useMemo(() => {
@@ -46,12 +37,12 @@ const LiveMarketData: React.FC<LiveMarketDataProps> = ({ coins }) => {
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold">Live Market Data</CardTitle>
           <Badge variant="secondary" className="bg-green-500/10 text-green-400 border-green-500/20">
-            Top 8 Coins • Combined Volume: {formatVolume(totalVolume)}
+            BTC, ETH, SOL • Volume: {formatVolume(totalVolume)}
           </Badge>
         </div>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {displayCoins.map((coin) => (
             <div
               key={coin.symbol}
@@ -92,8 +83,8 @@ const LiveMarketData: React.FC<LiveMarketDataProps> = ({ coins }) => {
         
         <div className="mt-4 pt-3 border-t border-border/50">
           <div className="flex items-center justify-between text-sm text-muted-foreground">
-            <span>Showing top 8 coins (BTC, ETH, SOL + 5 top movers)</span>
-            <span>Analyzing all 50 pairs for signals</span>
+            <span>Live data • Updates every second</span>
+            <span>Backend analyzing all 50 pairs for signals</span>
           </div>
         </div>
       </CardContent>

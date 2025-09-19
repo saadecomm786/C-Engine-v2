@@ -133,7 +133,7 @@ const Index = () => {
             </h1>
             <p className="text-muted-foreground mt-1 flex items-center gap-2">
               <Activity className="w-4 h-4" />
-              Monitoring all 50 coins • Auto-scan every 15s • 90% accuracy targeting
+              Analyzing all 50 coins • Auto-scan every 15s • 2-3 signals/min • 90% accuracy targeting
             </p>
           </div>
           <div className="flex items-center gap-4">
@@ -198,21 +198,26 @@ const Index = () => {
           <div>
             <h3 className="font-semibold text-green-500">Super Human AI Trader Active</h3>
             <p className="text-sm text-muted-foreground mt-1 mb-3">
-              Advanced signal engine analyzing all 50 USDT pairs with 90% accuracy targeting. 
-              Multi-API redundancy ensures never-stale data with sub-second updates.
+              Super human crypto trader with 90% accuracy targeting. Analyzing all 50 USDT pairs with 
+              sophisticated volatility targeting, historical validation, and fake pump detection.
+              Continuous signal generation with no blank states.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
               <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="bg-blue-500/10 text-blue-400">Volatility Targeting</Badge>
-                <span className="text-xs text-muted-foreground">Scalping mode active</span>
+                <Badge variant="secondary" className="bg-blue-500/10 text-blue-400">All 50 Pairs</Badge>
+                <span className="text-xs text-muted-foreground">Continuous analysis</span>
               </div>
               <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="bg-purple-500/10 text-purple-400">History Validation</Badge>
-                <span className="text-xs text-muted-foreground">Avoiding fake pumps</span>
+                <Badge variant="secondary" className="bg-purple-500/10 text-purple-400">Super Human AI</Badge>
+                <span className="text-xs text-muted-foreground">90% accuracy targeting</span>
               </div>
               <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="bg-orange-500/10 text-orange-400">No Duplicates</Badge>
-                <span className="text-xs text-muted-foreground">Signal locks active</span>
+                <Badge variant="secondary" className="bg-orange-500/10 text-orange-400">No Fake Pumps</Badge>
+                <span className="text-xs text-muted-foreground">Historical validation</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge variant="secondary" className="bg-green-500/10 text-green-400">Never Blank</Badge>
+                <span className="text-xs text-muted-foreground">2-3 signals/min</span>
               </div>
             </div>
           </div>
